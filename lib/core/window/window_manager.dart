@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:blender_flutter/core/window/enum/corner.dart';
+import 'package:blender_flutter/core/window/enum/side.dart';
 import 'package:blender_flutter/core/window/window_box.dart';
 import 'package:blender_flutter/core/window/window_element.dart';
 import 'package:blender_flutter/core/window/window_group.dart';
@@ -29,13 +31,12 @@ class WindowManagerState extends State<WindowManager> {
     WindowGroup group,
     WindowBox window,
     WindowBox sibling,
-    Alignment alignment,
+    Side side,
   ) {
     print('doing group: ${group.id}');
     for (final child in group.children) {
       if (child is WindowGroup) {
-        final newChild =
-            _addNewWidnowToGroup(child, window, sibling, alignment);
+        final newChild = _addNewWidnowToGroup(child, window, sibling, side);
         if (newChild != null) {
           return WindowGroup(
             group.type,
@@ -50,7 +51,7 @@ class WindowManagerState extends State<WindowManager> {
           print('this group is: ${group.type}');
           switch (group.type) {
             case WindowGroupType.row:
-              if (alignment == Alignment.centerLeft) {
+              if (side == Side.left) {
                 print('adding to center left');
 
                 final childrr = group.children.indexOf(sibling);
@@ -62,7 +63,7 @@ class WindowManagerState extends State<WindowManager> {
                   children: newChildren,
                 );
                 return newGroup;
-              } else if (alignment == Alignment.centerRight) {
+              } else if (side == Side.right) {
                 print('adding to center right');
                 final childrr = group.children.indexOf(sibling) + 1;
                 final newChildren = List<WindowElement>.from(group.children)
@@ -85,7 +86,7 @@ class WindowManagerState extends State<WindowManager> {
                             ? WindowGroup(
                                 WindowGroupType.column,
                                 id: Random().nextInt(4861396),
-                                children: alignment == Alignment.topCenter
+                                children: side == Side.top
                                     ? [
                                         window,
                                         sibling,
@@ -101,7 +102,7 @@ class WindowManagerState extends State<WindowManager> {
                 );
               }
             case WindowGroupType.column:
-              if (alignment == Alignment.topCenter) {
+              if (side == Side.top) {
                 print('adding to top center');
                 final childrr = group.children.indexOf(sibling);
                 final newChildren = List<WindowElement>.from(group.children)
@@ -112,7 +113,7 @@ class WindowManagerState extends State<WindowManager> {
                   children: newChildren,
                 );
                 return newGroup;
-              } else if (alignment == Alignment.bottomCenter) {
+              } else if (side == Side.bottom) {
                 print('adding to bottom center');
                 final childrr = group.children.indexOf(sibling) + 1;
                 final newChildren = List<WindowElement>.from(group.children)
@@ -135,7 +136,7 @@ class WindowManagerState extends State<WindowManager> {
                             ? WindowGroup(
                                 WindowGroupType.row,
                                 id: Random().nextInt(4861396),
-                                children: alignment == Alignment.centerLeft
+                                children: side == Side.left
                                     ? [
                                         window,
                                         sibling,
@@ -157,11 +158,10 @@ class WindowManagerState extends State<WindowManager> {
     return null;
   }
 
-  void addNewWindow(WindowBox window, WindowBox sibling, Alignment alignment) {
+  void addNewWindow(WindowBox window, WindowBox sibling, Side side) {
     setState(() {
-      windowGroup =
-          _addNewWidnowToGroup(windowGroup, window, sibling, alignment) ??
-              windowGroup;
+      windowGroup = _addNewWidnowToGroup(windowGroup, window, sibling, side) ??
+          windowGroup;
     });
   }
 
@@ -170,10 +170,8 @@ class WindowManagerState extends State<WindowManager> {
     return windowGroup;
   }
 
-  void removeWindow(WindowBox stayingWindow, Alignment alignment) {
+  void mergeWindow(WindowBox stayingWindow, Side side, Corner corner) {
     // removing the sibling window to the stayingWindow
     // we find the sibling window using the alignment
-    // TODO(arin): implement this
-    throw UnimplementedError();
   }
 }

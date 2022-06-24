@@ -30,12 +30,14 @@ class WindowGroup extends WindowElement {
       switch (type) {
         case WindowGroupType.row:
           return Expanded(
+            flex: 1000,
             child: Row(
               children: children,
             ),
           );
         case WindowGroupType.column:
           return Expanded(
+            flex: 1000,
             child: Column(
               children: children,
             ),
